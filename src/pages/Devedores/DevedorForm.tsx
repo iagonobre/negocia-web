@@ -69,7 +69,7 @@ export function DevedorForm() {
 
   const { mutate: salvar, isPending } = useMutation({
     mutationFn: () => {
-      const payload = {
+      const base = {
         nome: form.nome,
         email: form.email || undefined,
         telefone: form.telefone,
@@ -83,7 +83,8 @@ export function DevedorForm() {
         origem: 'API' as const,
         empresaId: user!.id,
       }
-      return editing ? atualizarDevedor(id!, payload) : criarDevedor(payload)
+      if (editing) return atualizarDevedor(id!, base)
+      return criarDevedor({ ...base, tentativas: 0 })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devedores'] })
