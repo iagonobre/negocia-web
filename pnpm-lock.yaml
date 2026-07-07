@@ -6,7 +6,9 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  apps/negocia:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.2.2
