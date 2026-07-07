@@ -3,6 +3,12 @@
   "private": true,
   "scripts": {
     "dev:negocia": "pnpm --filter @negocia/app dev",
-    "build:negocia": "pnpm --filter @negocia/app build"
+    "build:negocia": "pnpm --filter @negocia/app build",
+    
+    "dev:saude": "pnpm --filter @saude/app dev --port 3001",
+    "build:saude": "pnpm --filter @saude/app build",
+    
+    "dev:oficina": "pnpm --filter @oficina/app dev --port 3002",
+    "build:oficina": "pnpm --filter @oficina/app build"
   }
 }
