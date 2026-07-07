@@ -6,20 +6,14 @@ import { Layout, PublicLayout } from './components/layout/Layout'
 import { Login } from './pages/Login'
 import { Cadastro } from './pages/Cadastro'
 import { Dashboard } from './pages/Dashboard'
-import { Devedores } from './pages/Devedores/index'
-import { DevedorForm } from './pages/Devedores/DevedorForm'
-import { DevedorDetalhe } from './pages/Devedores/DevedorDetalhe'
-import { Faixas } from './pages/Faixas/index'
-import { FaixaForm } from './pages/Faixas/FaixaForm'
-import { Propostas } from './pages/Propostas/index'
-import { PropostaDetalhe } from './pages/Propostas/PropostaDetalhe'
+import { Clientes } from './pages/Clientes/index'
+import { ClienteForm } from './pages/Clientes/ClienteForm'
+import { ClienteDetalhe } from './pages/Clientes/ClienteDetalhe'
+import { ServicoConfigList } from './pages/ServicoConfig/index'
+import { ServicoConfigForm } from './pages/ServicoConfig/ServicoConfigForm'
 import { Perfil } from './pages/Perfil'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, staleTime: 30_000 },
-  },
-})
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 30_000 } } })
 
 export default function App() {
   return (
@@ -34,15 +28,16 @@ export default function App() {
 
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/devedores" element={<Devedores />} />
-              <Route path="/devedores/novo" element={<DevedorForm />} />
-              <Route path="/devedores/:id" element={<DevedorDetalhe />} />
-              <Route path="/devedores/:id/editar" element={<DevedorForm />} />
-              <Route path="/faixas" element={<Faixas />} />
-              <Route path="/faixas/nova" element={<FaixaForm />} />
-              <Route path="/faixas/:id/editar" element={<FaixaForm />} />
-              <Route path="/propostas" element={<Propostas />} />
-              <Route path="/propostas/:id" element={<PropostaDetalhe />} />
+              
+              <Route path="/clientes" element={<Clientes />} />
+              <Route path="/clientes/novo" element={<ClienteForm />} />
+              <Route path="/clientes/:id" element={<ClienteDetalhe />} />
+              <Route path="/clientes/:id/editar" element={<ClienteForm />} />
+
+              <Route path="/servico-config" element={<ServicoConfigList />} />
+              <Route path="/servico-config/novo" element={<ServicoConfigForm />} />
+              <Route path="/servico-config/:id/editar" element={<ServicoConfigForm />} />
+              
               <Route path="/perfil" element={<Perfil />} />
             </Route>
 
