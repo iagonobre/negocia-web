@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { dispararLembretesSaude } from '../api/notificacao'
 // Assumindo que você vá criar uma rota getPainel genérica ou adaptada na API do back-end de saúde
 import { getPainel } from '../api/empresa' 
 import { useAuth } from '../contexts/AuthContext'
@@ -56,13 +57,20 @@ export function Dashboard() {
   const queryClient = useQueryClient()
   const [feedback, setFeedback] = useState('')
 
-  // Caso o backend de Saúde não tenha a rota /painel ainda, isso vai dar erro. 
-  // Mas a estrutura visual já está adaptada para receber data.pacientes e data.consultas
-  const { data, isLoading, error } = useQuery({
+const { data, isLoading, error } = useQuery({
     queryKey: ['painel'],
     queryFn: getPainel,
   })
 
+  const { mutate: disparar, isPending: disparando } = useMutation({
+    mutationFn: dispararLembretesSaude,
+    onSuccess: (res) => {
+      setFeedback(`${res.enviados} lembrete(s) de retorno enviado(s) com sucesso.`)
+      queryClient.invalidateQueries({ queryKey: ['painel'] })
+      setTimeout(() => setFeedback(''), 4000)
+    },
+  })
+  
   if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>
   if (error || !data) return <p className="text-sm text-red-500 mt-10 text-center">Aguardando implementação do Dashboard na API de Saúde...</p>
 
@@ -77,9 +85,14 @@ export function Dashboard() {
           {feedback && (
             <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">{feedback}</p>
           )}
-          <Button variant="secondary" size="sm" onClick={() => {}}>
-            Baixar Relatório
-          </Button>
+          <div className="flex items-center gap-3">
+            {feedback && (
+              <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">{feedback}</p>
+            )}
+            <Button variant="secondary" size="sm" loading={disparando} onClick={() => disparar()}>
+              Disparar lembretes
+            </Button>
+          </div>
         </div>
       </div>
 

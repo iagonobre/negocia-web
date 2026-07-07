@@ -10,6 +10,8 @@ import { Pacientes } from './pages/Pacientes/index'
 import { PacienteForm } from './pages/Pacientes/PacienteForm'
 import { PacienteDetalhe } from './pages/Pacientes/PacienteDetalhe'
 import { Perfil } from './pages/Perfil'
+import { ConfigRetornoList } from './pages/ConfigRetorno/index'
+import { ConfigRetornoForm } from './pages/ConfigRetorno/ConfigRetornoForm'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +37,10 @@ export default function App() {
               <Route path="/pacientes/novo" element={<PacienteForm />} />
               <Route path="/pacientes/:id" element={<PacienteDetalhe />} />
               <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
+
+              <Route path="/config-retorno" element={<ConfigRetornoList />} />
+              <Route path="/config-retorno/nova" element={<ConfigRetornoForm />} />
+              <Route path="/config-retorno/:id/editar" element={<ConfigRetornoForm />} />
               
               <Route path="/perfil" element={<Perfil />} />
             </Route>
