@@ -47,10 +47,10 @@ export const historicoDevedor = (id: string) =>
   api.get(`/devedor/${id}/historico`).then((r) => r.data)
 
 export const criarDevedor = (payload: CreateDevedorPayload) =>
-  api.post<Devedor>('/devedor/cadastrar', payload).then((r) => r.data)
+  api.post<Devedor>('/devedor', payload).then((r) => r.data)
 
 export const atualizarDevedor = (id: string, payload: Partial<CreateDevedorPayload>) =>
-  api.patch<Devedor>(`/devedor/atualizar/${id}`, payload).then((r) => r.data)
+  api.patch<Devedor>(`/devedor/${id}`, payload).then((r) => r.data)
 
 export const deletarDevedor = (id: string) =>
   api.delete(`/devedor/${id}`).then((r) => r.data)
