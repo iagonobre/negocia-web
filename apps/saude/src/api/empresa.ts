@@ -1,21 +1,20 @@
 import api from './client'
 
-export interface Painel {
-  devedores: {
+// 1. Interface do painel adaptada para o domínio de Saúde
+export interface PainelSaude {
+  pacientes: {
     total: number
     porStatus: Record<string, number>
   }
-  propostas: {
+  consultas: {
     total: number
+    agendados: number
+    semResposta: number
     porStatus: Record<string, number>
-  }
-  financeiro: {
-    valorTotalEmAberto: number
-    valorTotalRecuperado: number
-    taxaRecuperacaoPercent: number
   }
 }
 
+// 2. A interface da Empresa se mantém igual
 export interface Empresa {
   id: string
   nome: string
@@ -39,7 +38,7 @@ export interface Empresa {
 
 export const getPerfil = () => api.get<Empresa>('/empresa/perfil').then((r) => r.data)
 
-export const getPainel = () => api.get<Painel>('/empresa/painel').then((r) => r.data)
+export const getPainel = () => api.get<PainelSaude>('/empresa/painel').then((r) => r.data)
 
 export const updatePerfil = (data: Partial<Omit<Empresa, 'id' | 'createdAt' | 'updatedAt' | 'endereco'>> & { senha?: string; endereco?: Partial<Empresa['endereco']> }) =>
   api.patch<Empresa>('/empresa/perfil', data).then((r) => r.data)

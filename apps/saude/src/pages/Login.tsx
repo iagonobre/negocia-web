@@ -29,46 +29,46 @@ export function Login() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex flex-1 bg-blue-600 flex-col justify-between p-12">
+      <div className="hidden lg:flex flex-1 bg-teal-600 flex-col justify-between p-12">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
             <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <span className="text-white font-semibold text-lg">NegocIA</span>
+          <span className="text-white font-semibold text-lg">SaúdeIA</span>
         </div>
         <div>
           <h1 className="text-white text-3xl font-semibold leading-tight mb-4">
-            Recuperação de dívidas<br />com inteligência artificial
+            Agendamento de retornos<br />com inteligência artificial
           </h1>
-          <p className="text-blue-100 text-sm leading-relaxed">
-            Automatize suas cobranças. O agente de IA negocia com seus clientes inadimplentes via WhatsApp, 24 horas por dia.
+          <p className="text-teal-100 text-sm leading-relaxed">
+            Automatize sua agenda. O agente de IA marca consultas de retorno com seus pacientes via WhatsApp, 24 horas por dia.
           </p>
         </div>
-        <p className="text-blue-200 text-xs">© 2026 NegocIA. Todos os direitos reservados.</p>
+        <p className="text-teal-200 text-xs">© 2026 SaúdeIA. Todos os direitos reservados.</p>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-sm">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-6 lg:hidden">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-teal-600 flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900">NegocIA</span>
+              <span className="font-semibold text-gray-900">SaúdeIA</span>
             </div>
             <h2 className="text-xl font-semibold text-gray-900">Entrar</h2>
-            <p className="text-sm text-gray-500 mt-1">Acesse o painel da sua empresa</p>
+            <p className="text-sm text-gray-500 mt-1">Acesse o painel da sua clínica</p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
               label="E-mail"
               type="email"
-              placeholder="empresa@email.com"
+              placeholder="clinica@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -93,8 +93,8 @@ export function Login() {
 
           <p className="mt-6 text-sm text-gray-500 text-center">
             Não tem conta?{' '}
-            <Link to="/cadastro" className="text-blue-600 hover:underline font-medium">
-              Cadastre sua empresa
+            <Link to="/cadastro" className="text-teal-600 hover:underline font-medium">
+              Cadastre sua clínica
             </Link>
           </p>
         </div>
