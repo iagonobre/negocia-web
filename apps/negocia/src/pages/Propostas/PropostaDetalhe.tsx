@@ -65,7 +65,7 @@ export function PropostaDetalhe() {
   if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>
   if (!data) return <p className="text-sm text-red-500">Proposta não encontrada.</p>
 
-  const messages = data.historico.filter((m) => m.role !== 'system' && m.role !== 'tool')
+  const messages = data.historico.filter((m) => m.role !== 'system' && m.role !== 'tool' && m.content)
 
   return (
     <div className="flex flex-col gap-6">

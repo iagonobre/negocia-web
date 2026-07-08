@@ -100,7 +100,7 @@ export function ClienteDetalhe() {
                 <CardBody>
                   <p className="text-xs font-medium text-gray-500 mb-2">Conversa do Agente</p>
                   <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
-                    {a.historico.filter((m: any) => m.role !== 'system' && m.role !== 'tool').map((m: any, i: number) => (
+                    {a.historico.filter((m: any) => m.role !== 'system' && m.role !== 'tool' && m.content).map((m: any, i: number) => (
                       <div key={i} className={`rounded-lg px-3 py-2 text-xs max-w-[85%] ${m.role === 'assistant' ? 'bg-amber-50 text-amber-900 self-start' : 'bg-gray-100 text-gray-800 self-end'}`}>
                         {m.content}
                       </div>

@@ -118,7 +118,7 @@ export function PacienteDetalhe() {
                   <p className="text-xs font-medium text-gray-500 mb-2">Conversa do Agente (WhatsApp)</p>
                   <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
                     {c.historico
-                      .filter((m) => m.role !== 'system' && m.role !== 'tool')
+                      .filter((m) => m.role !== 'system' && m.role !== 'tool' && m.content)
                       .map((m, i) => (
                         <div
                           key={i}
