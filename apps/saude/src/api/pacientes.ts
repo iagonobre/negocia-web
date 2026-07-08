@@ -22,9 +22,23 @@ export interface CreatePacientePayload {
   configRetornoId?: string
 }
 
+export interface PacienteComHistorico extends Paciente {
+  configRetorno: { id: string; descricao: string; diasParaRetorno: number } | null
+  consultas: Array<{
+    id: string
+    status: string
+    dataAgendada: string | null
+    historico: Array<{ role: string; content: string }>
+    createdAt: string
+  }>
+}
+
 export const listarPacientes = () => api.get<Paciente[]>('/paciente').then((r) => r.data)
 
 export const buscarPaciente = (id: string) => api.get<Paciente>(`/paciente/${id}`).then((r) => r.data)
+
+export const historicoPaciente = (id: string) =>
+  api.get<PacienteComHistorico>(`/paciente/${id}/historico`).then((r) => r.data)
 
 export const criarPaciente = (payload: CreatePacientePayload) =>
   api.post<Paciente>('/paciente', payload).then((r) => r.data)

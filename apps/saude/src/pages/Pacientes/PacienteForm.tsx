@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { criarPaciente, atualizarPaciente, buscarPaciente } from '../../api/pacientes'
+import { listarConfigRetornos } from '../../api/config-retorno'
 import { Input } from '../../components/ui/Input'
+import { Select } from '../../components/ui/Select'
 import { Button } from '../../components/ui/Button'
 import { Card, CardBody } from '../../components/ui/Card'
 import { Spinner } from '../../components/ui/Spinner'
@@ -20,12 +22,18 @@ export function PacienteForm() {
     telefone: '',
     cpf: '',
     convenio: '',
+    configRetornoId: '',
   })
 
   const { data: existing, isLoading: loadingExisting } = useQuery({
     queryKey: ['paciente', id],
     queryFn: () => buscarPaciente(id!),
     enabled: editing,
+  })
+
+  const { data: configRetornos = [] } = useQuery({
+    queryKey: ['config-retornos'],
+    queryFn: listarConfigRetornos,
   })
 
   useEffect(() => {
@@ -36,6 +44,7 @@ export function PacienteForm() {
         telefone: existing.telefone,
         cpf: existing.cpf ?? '',
         convenio: existing.convenio ?? '',
+        configRetornoId: existing.configRetornoId ?? '',
       })
     }
   }, [existing])
@@ -48,6 +57,7 @@ export function PacienteForm() {
         telefone: form.telefone,
         cpf: form.cpf || undefined,
         convenio: form.convenio || undefined,
+        configRetornoId: form.configRetornoId || undefined,
       }
       if (editing) return atualizarPaciente(id!, payload)
       return criarPaciente(payload)
@@ -90,6 +100,14 @@ export function PacienteForm() {
             <Input label="CPF" value={form.cpf} onChange={(e) => set('cpf', e.target.value)} placeholder="12345678901" />
             <Input label="Convênio Médico" value={form.convenio} onChange={(e) => set('convenio', e.target.value)} placeholder="Unimed, Hapvida..." hint="Deixe em branco se particular" />
           </div>
+
+          <Select
+            label="Regra de retorno"
+            value={form.configRetornoId}
+            onChange={(e) => set('configRetornoId', e.target.value)}
+            placeholder="Sem regra específica (usa tom padrão)"
+            options={configRetornos.map((c) => ({ value: c.id, label: `${c.descricao} (retorno em ${c.diasParaRetorno} dias)` }))}
+          />
 
           {error && <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
 

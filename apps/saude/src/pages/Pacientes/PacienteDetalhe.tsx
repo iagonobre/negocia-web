@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { buscarPaciente } from '../../api/pacientes'
+import { historicoPaciente } from '../../api/pacientes'
 import { iniciarRetornoWhatsApp } from '../../api/consultas'
 import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
@@ -12,12 +12,15 @@ function fmtDate(s: string) {
   return new Date(s).toLocaleDateString('pt-BR')
 }
 
+function fmtDataHora(s: string) {
+  return new Date(s).toLocaleString('pt-BR')
+}
+
 const statusConsultaBadge: Record<string, { variant: 'blue' | 'green' | 'yellow' | 'red' | 'gray'; label: string }> = {
-  AGUARDANDO_CONTATO: { variant: 'yellow', label: 'Aguardando Contato' },
-  EM_ATENDIMENTO: { variant: 'blue', label: 'Em Atendimento' },
-  AGENDADO: { variant: 'green', label: 'Agendado' },
-  CANCELADO: { variant: 'red', label: 'Cancelado' },
-  SEM_RESPOSTA: { variant: 'gray', label: 'Sem resposta' },
+  PENDENTE: { variant: 'yellow', label: 'Pendente' },
+  CONFIRMADA: { variant: 'green', label: 'Confirmada' },
+  REALIZADA: { variant: 'blue', label: 'Realizada' },
+  CANCELADA: { variant: 'red', label: 'Cancelada' },
 }
 
 export function PacienteDetalhe() {
@@ -28,7 +31,7 @@ export function PacienteDetalhe() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['paciente-detalhe', id],
-    queryFn: () => buscarPaciente(id!),
+    queryFn: () => historicoPaciente(id!),
     enabled: !!id,
   })
 
@@ -80,6 +83,7 @@ export function PacienteDetalhe() {
               ['Telefone', data.telefone],
               ['CPF', data.cpf ?? '—'],
               ['Convênio', data.convenio ?? 'Particular'],
+              ['Regra de retorno', data.configRetorno ? `${data.configRetorno.descricao} (${data.configRetorno.diasParaRetorno}d)` : 'Nenhuma vinculada'],
               ['Cadastrado em', fmtDate(data.createdAt)],
             ].map(([k, v]) => (
               <div key={String(k)} className="flex justify-between">
@@ -91,15 +95,11 @@ export function PacienteDetalhe() {
         </Card>
 
         <div className="lg:col-span-2 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-gray-900">Histórico de consultas ({((data as any).consultas)?.length ?? 0})</h2>
-          {((data as any).consultas ?? []).length === 0 ? (
+          <h2 className="text-sm font-semibold text-gray-900">Histórico de consultas ({data.consultas.length})</h2>
+          {data.consultas.length === 0 ? (
             <Card><CardBody><p className="text-sm text-gray-400 text-center py-6">Nenhum histórico de contato ainda.</p></CardBody></Card>
           ) : (
-            ((data as any).consultas as Array<{
-              id: string; status: string;
-              historico: Array<{ role: string; content: string }>;
-              createdAt: string;
-            }>).map((c) => (
+            data.consultas.map((c) => (
               <Card key={c.id}>
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -110,6 +110,9 @@ export function PacienteDetalhe() {
                       <span className="text-xs text-gray-400">{fmtDate(c.createdAt)}</span>
                     </div>
                   </div>
+                  {c.dataAgendada && (
+                    <p className="text-xs text-gray-500 mt-1">Agendado para {fmtDataHora(c.dataAgendada)}</p>
+                  )}
                 </CardHeader>
                 <CardBody>
                   <p className="text-xs font-medium text-gray-500 mb-2">Conversa do Agente (WhatsApp)</p>
