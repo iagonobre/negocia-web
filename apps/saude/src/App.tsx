@@ -8,6 +8,8 @@ import { Cadastro } from './pages/Cadastro'
 import { Pacientes } from './pages/Pacientes/index'
 import { PacienteForm } from './pages/Pacientes/PacienteForm'
 import { PacienteDetalhe } from './pages/Pacientes/PacienteDetalhe'
+import { Consultas } from './pages/Consultas/index'
+import { ConsultaDetalhe } from './pages/Consultas/ConsultaDetalhe'
 import { Perfil } from './pages/Perfil'
 import { ConfigRetornoList } from './pages/ConfigRetorno/index'
 import { ConfigRetornoForm } from './pages/ConfigRetorno/ConfigRetornoForm'
@@ -34,6 +36,9 @@ export default function App() {
               <Route path="/pacientes/novo" element={<PacienteForm />} />
               <Route path="/pacientes/:id" element={<PacienteDetalhe />} />
               <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
+
+              <Route path="/consultas" element={<Consultas />} />
+              <Route path="/consultas/:id" element={<ConsultaDetalhe />} />
 
               <Route path="/config-retorno" element={<ConfigRetornoList />} />
               <Route path="/config-retorno/nova" element={<ConfigRetornoForm />} />

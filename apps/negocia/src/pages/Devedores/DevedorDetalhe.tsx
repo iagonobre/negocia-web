@@ -227,7 +227,7 @@ export function DevedorDetalhe() {
                   <p className="text-xs font-medium text-gray-500 mb-2">Conversa</p>
                   <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
                     {p.historico
-                      .filter((m) => m.role !== 'system' && m.role !== 'tool')
+                      .filter((m) => m.role !== 'system' && m.role !== 'tool' && m.content)
                       .map((m, i) => (
                         <div
                           key={i}

@@ -57,7 +57,7 @@ export function Propostas() {
                     {p.valorAcordado !== null && (
                       <span className="text-green-600 font-medium">Acordo: {fmt(p.valorAcordado)} em {p.parcelasAcordadas}x</span>
                     )}
-                    <span>{p.historico.filter((m) => m.role !== 'system' && m.role !== 'tool').length} mensagens</span>
+                    <span>{p.historico.filter((m) => m.role !== 'system' && m.role !== 'tool' && m.content).length} mensagens</span>
                   </div>
                 </div>
                 <Link to={`/propostas/${p.id}`}>
