@@ -73,6 +73,7 @@ export function Dashboard() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [lembreteFeedback, setLembreteFeedback] = useState('')
+  const [lembreteErro, setLembreteErro] = useState('')
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['painel'],
@@ -82,9 +83,14 @@ export function Dashboard() {
   const { mutate: disparar, isPending: disparando } = useMutation({
     mutationFn: dispararLembretes,
     onSuccess: (res) => {
+      setLembreteErro('')
       setLembreteFeedback(`${res.enviados} lembrete(s) enviado(s) com sucesso.`)
       queryClient.invalidateQueries({ queryKey: ['painel'] })
       setTimeout(() => setLembreteFeedback(''), 4000)
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
+      setLembreteErro(Array.isArray(msg) ? msg[0] : (msg ?? 'Erro ao disparar lembretes.'))
     },
   })
 
@@ -101,6 +107,9 @@ export function Dashboard() {
         <div className="flex items-center gap-3">
           {lembreteFeedback && (
             <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">{lembreteFeedback}</p>
+          )}
+          {lembreteErro && (
+            <p className="text-sm text-red-600 bg-red-50 px-3 py-1.5 rounded-lg">{lembreteErro}</p>
           )}
           <Button variant="secondary" size="sm" loading={disparando} onClick={() => disparar()}>
             Disparar lembretes

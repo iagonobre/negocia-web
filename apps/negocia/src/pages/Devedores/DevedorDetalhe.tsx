@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { historicoDevedor } from '../../api/devedores'
-import { iniciarNegociacao, fecharAcordo, type StatusProposta } from '../../api/propostas'
+import { iniciarNegociacao, reiniciarNegociacao, fecharAcordo, type StatusProposta } from '../../api/propostas'
 import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
 import { Card, CardBody, CardHeader } from '../../components/ui/Card'
@@ -44,6 +44,7 @@ export function DevedorDetalhe() {
   const queryClient = useQueryClient()
   const [acordoForm, setAcordoForm] = useState<AcordoForm | null>(null)
   const [feedback, setFeedback] = useState('')
+  const [error, setError] = useState('')
 
   const { data, isLoading } = useQuery({
     queryKey: ['devedor-historico', id],
@@ -51,13 +52,31 @@ export function DevedorDetalhe() {
     enabled: !!id,
   })
 
+  const extrairErro = (err: unknown) => {
+    const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
+    return Array.isArray(msg) ? msg[0] : (msg ?? 'Ocorreu um erro. Tente novamente.')
+  }
+
   const { mutate: iniciar, isPending: iniciando } = useMutation({
     mutationFn: () => iniciarNegociacao(id!),
     onSuccess: () => {
+      setError('')
       setFeedback('Negociação iniciada! Mensagem enviada via WhatsApp.')
       queryClient.invalidateQueries({ queryKey: ['devedor-historico', id] })
       setTimeout(() => setFeedback(''), 4000)
     },
+    onError: (err) => setError(extrairErro(err)),
+  })
+
+  const { mutate: reiniciar, isPending: reiniciando } = useMutation({
+    mutationFn: () => reiniciarNegociacao(id!),
+    onSuccess: () => {
+      setError('')
+      setFeedback('Negociação reiniciada! Mensagem enviada via WhatsApp.')
+      queryClient.invalidateQueries({ queryKey: ['devedor-historico', id] })
+      setTimeout(() => setFeedback(''), 4000)
+    },
+    onError: (err) => setError(extrairErro(err)),
   })
 
   const { mutate: fechar, isPending: fechando } = useMutation({
@@ -68,9 +87,11 @@ export function DevedorDetalhe() {
         parcelasAcordadas: acordoForm!.status === 'ACEITA' ? parseInt(acordoForm!.parcelasAcordadas) : undefined,
       }),
     onSuccess: () => {
+      setError('')
       setAcordoForm(null)
       queryClient.invalidateQueries({ queryKey: ['devedor-historico', id] })
     },
+    onError: (err) => setError(extrairErro(err)),
   })
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>
@@ -94,9 +115,24 @@ export function DevedorDetalhe() {
         </div>
         <div className="flex gap-2">
           {feedback && <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">{feedback}</p>}
+          {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-1.5 rounded-lg">{error}</p>}
           {(data.status === 'PENDENTE' || data.status === 'SEM_RESPOSTA') && (
             <Button size="sm" loading={iniciando} onClick={() => iniciar()}>
               Iniciar negociação
+            </Button>
+          )}
+          {data.status === 'EM_NEGOCIACAO' && (
+            <Button
+              size="sm"
+              variant="secondary"
+              loading={reiniciando}
+              onClick={() => {
+                if (confirm('Isso cancela a negociação pendente e começa do zero (a conversa atual será apagada). Use apenas se a mensagem não chegou ao devedor. Continuar?')) {
+                  reiniciar()
+                }
+              }}
+            >
+              Reiniciar negociação
             </Button>
           )}
           <Link to={`/devedores/${id}/editar`}>

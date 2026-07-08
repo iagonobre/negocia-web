@@ -29,6 +29,9 @@ export const buscarProposta = (id: string) =>
 export const iniciarNegociacao = (devedorId: string) =>
   api.post(`/whatsapp/iniciar/${devedorId}`).then((r) => r.data)
 
+export const reiniciarNegociacao = (devedorId: string) =>
+  api.post(`/whatsapp/reiniciar/${devedorId}`).then((r) => r.data)
+
 export const enviarMensagem = (id: string, mensagem: string) =>
   api.post<{ id: string; mensagemAgente: string }>(`/proposta/${id}/chat`, { mensagem }).then((r) => r.data)
 

@@ -21,7 +21,7 @@ export function FaixaForm() {
     prazoMaximoDias: '',
     parcelasMaximas: '',
     descontoMaximo: '',
-    tomComunicacao: 'formal',
+    tomComunicacao: '',
     mensagemInicial: '',
   })
 
@@ -100,24 +100,7 @@ export function FaixaForm() {
             <Input label="Prazo máx. (dias)" type="number" min="1" value={form.prazoMaximoDias} onChange={(e) => set('prazoMaximoDias', e.target.value)} required placeholder="30" />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">Tom de comunicação</label>
-            <div className="flex gap-3">
-              {['formal', 'informal', 'neutro'].map((tom) => (
-                <label key={tom} className="flex items-center gap-1.5 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="tom"
-                    value={tom}
-                    checked={form.tomComunicacao === tom}
-                    onChange={() => set('tomComunicacao', tom)}
-                    className="accent-blue-600"
-                  />
-                  <span className="text-sm capitalize text-gray-700">{tom}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          <Input label="Tom de comunicação" value={form.tomComunicacao} onChange={(e) => set('tomComunicacao', e.target.value)} required placeholder="Ex: informal e direto" />
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Mensagem inicial (opcional)</label>

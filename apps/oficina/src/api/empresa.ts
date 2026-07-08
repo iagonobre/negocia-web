@@ -1,18 +1,5 @@
 import api from './client'
 
-export interface PainelOficina {
-  clientes: {
-    total: number
-    porStatus: Record<string, number>
-  }
-  agendamentos: {
-    total: number
-    pendentes: number
-    agendados: number
-    porStatus: Record<string, number>
-  }
-}
-
 export interface Empresa {
   id: string
   nome: string
@@ -35,8 +22,6 @@ export interface Empresa {
 }
 
 export const getPerfil = () => api.get<Empresa>('/empresa/perfil').then((r) => r.data)
-
-export const getPainel = () => api.get<PainelOficina>('/empresa/painel').then((r) => r.data)
 
 export const updatePerfil = (data: Partial<Omit<Empresa, 'id' | 'createdAt' | 'updatedAt' | 'endereco'>> & { senha?: string; endereco?: Partial<Empresa['endereco']> }) =>
   api.patch<Empresa>('/empresa/perfil', data).then((r) => r.data)

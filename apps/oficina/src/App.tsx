@@ -5,7 +5,6 @@ import { Layout, PublicLayout } from './components/layout/Layout'
 
 import { Login } from './pages/Login'
 import { Cadastro } from './pages/Cadastro'
-import { Dashboard } from './pages/Dashboard'
 import { Clientes } from './pages/Clientes/index'
 import { ClienteForm } from './pages/Clientes/ClienteForm'
 import { ClienteDetalhe } from './pages/Clientes/ClienteDetalhe'
@@ -27,8 +26,6 @@ export default function App() {
             </Route>
 
             <Route element={<Layout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/novo" element={<ClienteForm />} />
               <Route path="/clientes/:id" element={<ClienteDetalhe />} />
@@ -41,7 +38,7 @@ export default function App() {
               <Route path="/perfil" element={<Perfil />} />
             </Route>
 
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/clientes" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

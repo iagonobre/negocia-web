@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { listarPacientes, deletarPaciente, type Paciente } from '../../api/pacientes'
 import { iniciarRetornoWhatsApp } from '../../api/consultas'
+import { dispararLembretesSaude } from '../../api/notificacao'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Spinner } from '../../components/ui/Spinner'
@@ -13,6 +14,7 @@ export function Pacientes() {
   const queryClient = useQueryClient()
   const [deleteTarget, setDeleteTarget] = useState<Paciente | null>(null)
   const [feedback, setFeedback] = useState('')
+  const [erro, setErro] = useState('')
   const [filter, setFilter] = useState('')
 
   const { data = [], isLoading } = useQuery({ queryKey: ['pacientes'], queryFn: listarPacientes })
@@ -33,6 +35,19 @@ export function Pacientes() {
     },
   })
 
+  const { mutate: dispararLembretes, isPending: disparando } = useMutation({
+    mutationFn: dispararLembretesSaude,
+    onSuccess: (res) => {
+      setErro('')
+      setFeedback(`${res.enviados} lembrete(s) de retorno enviado(s).`)
+      setTimeout(() => setFeedback(''), 4000)
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
+      setErro(Array.isArray(msg) ? msg[0] : (msg ?? 'Erro ao disparar lembretes.'))
+    },
+  })
+
   const filtered = data.filter(
     (p) =>
       p.nome.toLowerCase().includes(filter.toLowerCase()) ||
@@ -48,6 +63,10 @@ export function Pacientes() {
         </div>
         <div className="flex gap-2">
           {feedback && <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg self-center">{feedback}</p>}
+          {erro && <p className="text-sm text-red-600 bg-red-50 px-3 py-1.5 rounded-lg self-center">{erro}</p>}
+          <Button size="sm" variant="secondary" loading={disparando} onClick={() => dispararLembretes()}>
+            Disparar lembretes
+          </Button>
           <Link to="/pacientes/novo">
             <Button size="sm">Novo paciente</Button>
           </Link>

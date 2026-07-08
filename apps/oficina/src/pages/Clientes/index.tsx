@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { listarClientes, deletarCliente, type ClienteOficina } from '../../api/clientes'
 import { iniciarAgendamento } from '../../api/agendamentos'
+import { dispararLembretesOficina } from '../../api/notificacao'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Spinner } from '../../components/ui/Spinner'
@@ -13,6 +14,7 @@ export function Clientes() {
   const queryClient = useQueryClient()
   const [deleteTarget, setDeleteTarget] = useState<ClienteOficina | null>(null)
   const [feedback, setFeedback] = useState('')
+  const [erro, setErro] = useState('')
   const [filter, setFilter] = useState('')
 
   const { data = [], isLoading } = useQuery({ queryKey: ['clientes'], queryFn: listarClientes })
@@ -33,6 +35,19 @@ export function Clientes() {
     },
   })
 
+  const { mutate: dispararLembretes, isPending: disparando } = useMutation({
+    mutationFn: dispararLembretesOficina,
+    onSuccess: (res) => {
+      setErro('')
+      setFeedback(`${res.enviados} aviso(s) de revisão enviado(s).`)
+      setTimeout(() => setFeedback(''), 4000)
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string | string[] } } })?.response?.data?.message
+      setErro(Array.isArray(msg) ? msg[0] : (msg ?? 'Erro ao disparar lembretes.'))
+    },
+  })
+
   const filtered = data.filter(
     (c) => c.nome.toLowerCase().includes(filter.toLowerCase()) || c.placa.toLowerCase().includes(filter.toLowerCase())
   )
@@ -46,6 +61,10 @@ export function Clientes() {
         </div>
         <div className="flex gap-2">
           {feedback && <p className="text-sm text-green-700 bg-green-50 px-3 py-1.5 rounded-lg self-center">{feedback}</p>}
+          {erro && <p className="text-sm text-red-600 bg-red-50 px-3 py-1.5 rounded-lg self-center">{erro}</p>}
+          <Button size="sm" variant="secondary" loading={disparando} onClick={() => dispararLembretes()}>
+            Disparar lembretes
+          </Button>
           <Link to="/clientes/novo">
             <Button size="sm">Novo Cliente</Button>
           </Link>

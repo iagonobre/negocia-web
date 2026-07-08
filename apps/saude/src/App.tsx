@@ -5,7 +5,6 @@ import { Layout, PublicLayout } from './components/layout/Layout'
 
 import { Login } from './pages/Login'
 import { Cadastro } from './pages/Cadastro'
-import { Dashboard } from './pages/Dashboard'
 import { Pacientes } from './pages/Pacientes/index'
 import { PacienteForm } from './pages/Pacientes/PacienteForm'
 import { PacienteDetalhe } from './pages/Pacientes/PacienteDetalhe'
@@ -31,8 +30,6 @@ export default function App() {
             </Route>
 
             <Route element={<Layout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              
               <Route path="/pacientes" element={<Pacientes />} />
               <Route path="/pacientes/novo" element={<PacienteForm />} />
               <Route path="/pacientes/:id" element={<PacienteDetalhe />} />
@@ -45,7 +42,7 @@ export default function App() {
               <Route path="/perfil" element={<Perfil />} />
             </Route>
 
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/pacientes" replace />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

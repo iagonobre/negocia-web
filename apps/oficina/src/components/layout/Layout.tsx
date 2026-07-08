@@ -39,7 +39,7 @@ export function PublicLayout() {
     )
   }
 
-  if (user) return <Navigate to="/dashboard" replace />
+  if (user) return <Navigate to="/clientes" replace />
 
   return <Outlet />
 }

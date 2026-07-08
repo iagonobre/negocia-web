@@ -18,7 +18,7 @@ export function Login() {
     setError('')
     try {
       await login({ email, senha })
-      navigate('/dashboard')
+      navigate('/pacientes')
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       setError(msg ?? 'Email ou senha inválidos')

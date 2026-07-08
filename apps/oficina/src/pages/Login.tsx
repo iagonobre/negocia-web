@@ -14,7 +14,7 @@ export function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true); setError('')
-    try { await login({ email, senha }); navigate('/dashboard') }
+    try { await login({ email, senha }); navigate('/clientes') }
     catch (err: any) { setError(err?.response?.data?.message ?? 'Email ou senha inválidos') }
     finally { setLoading(false) }
   }
